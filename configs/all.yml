@@ -1,0 +1,73 @@
+MODEL:
+  PRETRAIN_CHOICE: 'imagenet'
+  PRETRAIN_PATH: '/home/lidg/.torch/models/resnet50-19c8e357.pth'
+  METRIC_LOSS_TYPE: 'triplet'
+  IF_WITH_CENTER: 'no'
+  IF_LABELSMOOTH: 'on'
+  NECK: 'bnneck'
+  LAST_STRIDE: 1
+
+
+INPUT:
+  SIZE_TRAIN: [256, 128]
+  SIZE_TEST: [256, 128]
+  PROB: 0.5
+  RE_PROB: 0.5
+  PADDING: 10
+
+DATASETS:
+
+  NAMES: ('sysu')
+  ROOT_DIR: ('/data1/lidg/reid_dataset/IV-ReID/split/')
+#  NAMES: ('market1501')
+#  ROOT_DIR: ('/data1/lidg/reid_dataset/')
+
+DATALOADER:
+  SAMPLER: 'softmax_triplet'
+  NUM_INSTANCE: 4
+  NUM_WORKERS: 8
+
+SOLVER:
+  OPTIMIZER_NAME: 'Adam'
+  MAX_EPOCHS: 120
+  BASE_LR: 0.00035
+  MARGIN: 0.3
+
+  CLUSTER_MARGIN: 0.3
+
+  CENTER_LR: 0.5
+  CENTER_LOSS_WEIGHT: 0.0005
+
+  RANGE_K: 2
+  RANGE_MARGIN: 0.3
+  RANGE_ALPHA: 0
+  RANGE_BETA: 1
+  RANGE_LOSS_WEIGHT: 1
+
+  BIAS_LR_FACTOR: 1
+  WEIGHT_DECAY: 0.0005
+  WEIGHT_DECAY_BIAS: 0.0005
+  IMS_PER_BATCH: 48          #  64  36  48  28  44
+
+  STEPS: [40,70]
+  GAMMA: 0.1
+
+  WARMUP_FACTOR: 0.01
+  WARMUP_ITERS: 10
+  WARMUP_METHOD: 'linear'
+
+  CHECKPOINT_PERIOD: 5
+  LOG_PERIOD: 90
+  EVAL_PERIOD: 200
+
+TEST:
+  IMS_PER_BATCH: 128
+  RE_RANKING: 'no'
+  WEIGHT: "./logs/sysu/cosine-norm-again/resnet50_model_120.pth"
+  NECK_FEAT: 'before'
+  FEAT_NORM: 'no'
+
+
+OUTPUT_DIR: "./logs/Experiment"
+
+
